@@ -1,5 +1,5 @@
 <package format="2">
-  <name>joint_state_publisher_gui</name>
+  <name>joint_state_publisher_gui_local</name>
   <version>2.4.0</version>
   <description>
     This package contains a GUI tool for setting and publishing joint state values for a given URDF.
@@ -18,8 +18,10 @@
   <exec_depend>python_qt_binding</exec_depend>
   <exec_depend>rclpy</exec_depend>
 
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
   <export>
-    <build_type>ament_python</build_type>
+    <build_type>ament_cmake</build_type>
   </export>
 
 </package>

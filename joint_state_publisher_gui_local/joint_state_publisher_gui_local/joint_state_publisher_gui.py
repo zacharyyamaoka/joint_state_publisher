@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Software License Agreement (BSD License)
 #
 # Copyright (c) 2010, Willow Garage, Inc.
@@ -57,10 +59,11 @@ from python_qt_binding.QtWidgets import QWidget
 
 from joint_state_publisher.joint_state_publisher import JointStatePublisher
 
-from joint_state_publisher_gui.flow_layout import FlowLayout
+from joint_state_publisher_gui_local.flow_layout import FlowLayout
 
 RANGE = 10000
-LINE_EDIT_WIDTH = 45
+# Increased line edit width to show all digits properly on 4K displays
+LINE_EDIT_WIDTH = 80
 SLIDER_WIDTH = 200
 INIT_NUM_SLIDERS = 7  # Initial number of sliders to show in window
 

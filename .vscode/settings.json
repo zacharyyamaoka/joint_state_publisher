@@ -1,0 +1,16 @@
+{
+    "enterFolder": {
+        "root": "/home/bam/public_ws/src/joint_state_publisher",
+        "crumbs": [],
+        "tip": "EnterFolder will update \"file.executes\" in \"setting.json\", If you uninstall or disable this extension, you will use the excludes below replace file.executes to restore the original state.",
+        "excludes": {
+            "**/.git": true,
+            "**/.svn": true,
+            "**/.hg": true,
+            "**/CVS": true,
+            "**/.DS_Store": true,
+            "**/Thumbs.db": true
+        }
+    },
+    "explorer.sortOrder": "modified"
+}
