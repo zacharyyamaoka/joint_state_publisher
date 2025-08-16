@@ -61,21 +61,35 @@ from joint_state_publisher.joint_state_publisher import JointStatePublisher
 
 from joint_state_publisher_gui_local.flow_layout import FlowLayout
 
+# Scale factor for UI elements (1.0 = original size, 1.5 = 50% larger)
+SCALE = 1.5
+
 RANGE = 10000
-# Increased line edit width to show all digits properly on 4K displays
-LINE_EDIT_WIDTH = 80
-SLIDER_WIDTH = 200
-INIT_NUM_SLIDERS = 7  # Initial number of sliders to show in window
+# Base dimensions (will be scaled by SCALE factor)
+BASE_LINE_EDIT_WIDTH = 80
+BASE_SLIDER_WIDTH = 200
+BASE_FONT_SIZE = 9
+BASE_BTN_HEIGHT = 25
+BASE_SLIDER_HEIGHT = 64
+
+# Scaled dimensions
+LINE_EDIT_WIDTH = int(BASE_LINE_EDIT_WIDTH * SCALE)
+SLIDER_WIDTH = int(BASE_SLIDER_WIDTH * SCALE)
+FONT_SIZE = int(BASE_FONT_SIZE * SCALE)
+DEFAULT_BTN_HEIGHT = int(BASE_BTN_HEIGHT * SCALE)
+DEFAULT_SLIDER_HEIGHT = int(BASE_SLIDER_HEIGHT * SCALE)
 
 # Defined by style - currently using the default style
 DEFAULT_WINDOW_MARGIN = 11
 DEFAULT_CHILD_MARGIN = 9
-DEFAULT_BTN_HEIGHT = 25
-DEFAULT_SLIDER_HEIGHT = 64  # Is the combination of default heights in Slider
 
 # Calculate default minimums for window sizing
 MIN_WIDTH = SLIDER_WIDTH + DEFAULT_CHILD_MARGIN * 4 + DEFAULT_WINDOW_MARGIN * 2
 MIN_HEIGHT = DEFAULT_BTN_HEIGHT * 2 + DEFAULT_WINDOW_MARGIN * 2 + DEFAULT_CHILD_MARGIN * 2
+
+# Set a larger minimum window size to ensure good usability
+MIN_WIDTH = max(MIN_WIDTH, 800)  # At least 800 pixels wide
+MIN_HEIGHT = max(MIN_HEIGHT, 600)  # At least 600 pixels tall
 
 class Slider(QWidget):
     def __init__(self, name):
@@ -84,7 +98,7 @@ class Slider(QWidget):
         self.joint_layout = QVBoxLayout()
         self.row_layout = QHBoxLayout()
 
-        font = QFont("Helvetica", 9, QFont.Bold)
+        font = QFont("Helvetica", FONT_SIZE, QFont.Bold)
         self.label = QLabel(name)
         self.label.setFont(font)
         self.row_layout.addWidget(self.label)
@@ -134,10 +148,13 @@ class JointStatePublisherGui(QMainWindow):
 
         # Button for randomizing the sliders
         self.rand_button = QPushButton('Randomize', self)
+        button_font = QFont("Helvetica", FONT_SIZE, QFont.Bold)
+        self.rand_button.setFont(button_font)
         self.rand_button.clicked.connect(self.randomizeEvent)
 
         # Button for centering the sliders
         self.ctr_button = QPushButton('Center', self)
+        self.ctr_button.setFont(button_font)
         self.ctr_button.clicked.connect(self.centerEvent)
 
         # Scroll area widget contents - layout
@@ -210,13 +227,19 @@ class JointStatePublisherGui(QMainWindow):
         self.centerEvent(None)
 
         # Set size of min size of window based on number of sliders.
-        if len(self.sliders) >= INIT_NUM_SLIDERS:  # Limits min size to show INIT_NUM_SLIDERS
-            num_sliders = INIT_NUM_SLIDERS
-        else:
-            num_sliders = len(self.sliders)
+        # Use actual number of sliders to fit all content
+        num_sliders = len(self.sliders)
         scroll_layout_height = num_sliders * DEFAULT_SLIDER_HEIGHT
         scroll_layout_height += (num_sliders + 1) * DEFAULT_CHILD_MARGIN
-        self.setMinimumSize(MIN_WIDTH, scroll_layout_height + MIN_HEIGHT)
+        
+        # Set minimum size to accommodate all sliders
+        min_height = scroll_layout_height + MIN_HEIGHT
+        self.setMinimumSize(MIN_WIDTH, min_height)
+        
+        # Set initial window size to fit all content comfortably
+        # Add some extra height for better visual appearance
+        initial_height = min_height + 50  # Extra 50 pixels for better spacing
+        self.resize(MIN_WIDTH, initial_height)
 
         self.sliderUpdateTrigger.emit()
 
